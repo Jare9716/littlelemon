@@ -10,6 +10,8 @@ import SwiftUI
 struct Menu: View {
     @Environment(\.managedObjectContext) private var viewContext
     
+    @State private var searchText = ""
+    
     func getMenuData() {
         PersistenceController.shared.clear()
         
@@ -34,12 +36,29 @@ struct Menu: View {
                         dish.image = menuItem.image
                         dish.price = menuItem.price
                     }
-                    
                     try? viewContext.save().self
                 }
             }
         }
         task.resume()
+    }
+    
+    func buildSortDescriptors() -> [NSSortDescriptor] {
+        return [
+            NSSortDescriptor(
+                key: "title",
+                ascending: true,
+                selector: #selector(NSString.localizedCaseInsensitiveCompare)
+            )
+        ]
+    }
+    
+    func buildPredicate() -> NSPredicate {
+        if searchText == "" {
+            return NSPredicate(value: true)
+        } else {
+            return NSPredicate(format: "title CONTAINS[cd] %@", searchText)
+        }
     }
     
     var body: some View {
@@ -48,7 +67,11 @@ struct Menu: View {
             Text("Chicago")
             Text("An app for managing ordering your favorite food")
             
-            FetchedObjects { (dishes: [Dish]) in
+            FetchedObjects(
+                predicate: buildPredicate(),
+                sortDescriptors: buildSortDescriptors()
+            ) {
+                (dishes: [Dish]) in
                 List {
                     ForEach(dishes) { dish in
                         HStack {
@@ -63,6 +86,8 @@ struct Menu: View {
                     }
                 }
             }
+            
+            TextField("Search menu", text: $searchText)
         }
         .onAppear { getMenuData() }
     }

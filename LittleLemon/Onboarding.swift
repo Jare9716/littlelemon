@@ -12,7 +12,6 @@ let kLastName = "last_name_key"
 let kEmail = "email_key"
 let kIsLoggedIn = "is_logged_in_key"
 
-
 struct Onboarding: View {
     @State private var firstName: String = ""
     @State private var lastName: String = ""
@@ -49,7 +48,7 @@ struct Onboarding: View {
                 Home()
             }
             .onAppear {
-                if(UserDefaults.standard.bool(forKey: kIsLoggedIn)){
+                if UserDefaults.standard.bool(forKey: kIsLoggedIn) {
                     isLoggedIn = true
                 }
             }
