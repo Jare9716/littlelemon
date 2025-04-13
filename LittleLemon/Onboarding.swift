@@ -22,28 +22,98 @@ struct Onboarding: View {
     var body: some View {
         NavigationStack {
             VStack {
-
-                TextField("First Name", text: $firstName)
-                TextField("Last Name", text: $lastName)
-                TextField("Email", text: $email)
-                Button("Register") {
-                    if !firstName.isEmpty && !lastName.isEmpty && !email.isEmpty
-                    {
-                        UserDefaults.standard.set(firstName, forKey: kFirstName)
-                        UserDefaults.standard.set(lastName, forKey: kLastName)
-                        UserDefaults.standard.set(email, forKey: kEmail)
-                        UserDefaults.standard.set(true, forKey: kIsLoggedIn)
-
-                        isLoggedIn = true
-
-                    } else {
-                        showingAlert = true
+                Image("Logo")
+                VStack(alignment: .leading) {
+                    Text("Little lemon")
+                        .font(.system(size: 56))
+                        .fontDesign(.serif)
+                        .foregroundStyle(
+                            Color(
+                                red: 244 / 255,
+                                green: 206 / 255,
+                                blue: 20 / 255
+                            )
+                        )
+                    Text("Chicago")
+                        .font(.title)
+                        .fontDesign(.serif)
+                        .foregroundStyle(.white)
+                    HStack {
+                        Text(
+                            "We are a family owned Mediterranean restaurant, focused on traditional recepies served with a modern twist."
+                        )
+                        .font(.body)
+                        .fontDesign(.serif)
+                        .foregroundStyle(.white)
+                        Image("Hero-image")
+                            .resizable()
+                            .frame(width: 100, height: 150)
+                            .cornerRadius(16)
                     }
-                }.alert(
-                    "Please fill all the fields",
-                    isPresented: $showingAlert
-                ) {}
-            }  //Navigation part! The NavigationLink isActive was deprecated
+                }
+                .padding()
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(
+                    Color(red: 73 / 255, green: 94 / 255, blue: 87 / 255)
+                )
+                VStack(spacing: 20) {
+                    TextField("First Name", text: $firstName)
+
+                    TextField("Last Name", text: $lastName)
+
+                    TextField("Email", text: $email)
+
+                    Button(action: {
+                        if !firstName.isEmpty && !lastName.isEmpty
+                            && !email.isEmpty
+                        {
+                            UserDefaults.standard.set(
+                                firstName,
+                                forKey: kFirstName
+                            )
+                            UserDefaults.standard.set(
+                                lastName,
+                                forKey: kLastName
+                            )
+                            UserDefaults.standard.set(email, forKey: kEmail)
+                            UserDefaults.standard.set(true, forKey: kIsLoggedIn)
+
+                            isLoggedIn = true
+
+                        } else {
+                            showingAlert = true
+                        }
+                    }) {
+                        HStack {
+                            Text("Register")
+                                .font(.body)
+                        }
+                        .frame(minWidth: 0, maxWidth: .infinity)
+                        .padding(3)
+                        .foregroundStyle(
+                            Color(.black)
+                        )
+                        .fontWeight(.semibold)
+
+                    }
+                    .alert(
+                        "Please fill all the fields",
+                        isPresented: $showingAlert
+                    ) {}
+                    .buttonStyle(.borderedProminent)
+                    .tint(
+                        Color(
+                            red: 244 / 255,
+                            green: 206 / 255,
+                            blue: 20 / 255
+                        )
+                    )
+                }
+                .padding()
+                .textFieldStyle(.roundedBorder)
+
+            }
+            //Navigation part! The NavigationLink isActive was deprecated
             .navigationDestination(isPresented: $isLoggedIn) {
                 Home()
             }
@@ -52,6 +122,7 @@ struct Onboarding: View {
                     isLoggedIn = true
                 }
             }
+            Spacer()
         }
 
     }
